@@ -35,6 +35,10 @@ Future<void> _shot(WidgetTester tester, String name) async {
     debugPrint('Screenshot $name: no root context');
     return;
   }
+  if (!ctx.mounted) {
+    debugPrint('Screenshot $name: root context unmounted');
+    return;
+  }
   final ro = ctx.findRenderObject();
   if (ro is! RenderRepaintBoundary) {
     debugPrint('Screenshot $name: not a RepaintBoundary');
