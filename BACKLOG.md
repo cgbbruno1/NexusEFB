@@ -108,6 +108,44 @@ Objetivo: preparar o PC para clonar, rodar Flutter e validar o build do fork Ava
 - [ ] Executar `flutter build apk --debug`.
   - Bloqueado porque o checkout local nao existe.
 
+## Sprint 0.2 — Recuperacao manual do ambiente Windows
+
+Objetivo: desbloquear o ambiente local para permitir clone, Flutter doctor e build Android debug.
+
+### Problemas encontrados
+
+- [ ] Alterar DNS do Windows manualmente para `1.1.1.1` e `8.8.8.8`.
+  - `ipconfig /flushdns` executou com sucesso.
+  - `nslookup github.com` continua falhando por timeout.
+
+- [ ] Restaurar acesso HTTPS ao GitHub.
+  - `curl.exe -I https://github.com` falhou com `Could not connect to server`.
+
+- [ ] Instalar Git oficial pelo navegador.
+  - Git global ainda nao existe.
+  - `where git` e `git --version` falham.
+
+- [ ] Reinstalar Flutter stable limpo em `C:\src\flutter`.
+  - A instalacao atual ainda e `3.24.3`.
+  - `flutter --version` segue travando.
+
+- [ ] Resolver manualmente o lockfile do Flutter.
+  - `flutter doctor -v` e `flutter doctor --android-licenses` seguem travando.
+  - Nao foi apagado `C:\src\flutter\bin\cache\lockfile` nesta sessao restrita.
+
+- [ ] Configurar Android SDK no PATH.
+  - `adb`, `sdkmanager` e `avdmanager` funcionam por caminho absoluto.
+  - `where adb`, `where sdkmanager` e `where avdmanager` ainda nao encontram as ferramentas.
+
+- [ ] Validar Android licenses.
+  - Bloqueado porque `flutter doctor --android-licenses` trava com o Flutter atual.
+
+- [ ] Clonar em `C:\work\NexusEFB`.
+  - Bloqueado porque Git global ainda nao esta instalado/no PATH.
+
+- [ ] Executar `flutter pub get`, `flutter analyze`, `flutter test` e `flutter build apk --debug`.
+  - Bloqueado porque o repositorio ainda nao foi clonado e Flutter ainda nao executa corretamente.
+
 ## Sprint 1 — Fundacao do App
 
 Sem itens nesta tarefa. A Sprint 1 nao deve iniciar antes da Sprint 0 passar.
