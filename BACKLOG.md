@@ -183,15 +183,45 @@ Objetivo: validar o projeto Flutter em ambiente remoto enquanto o PC local perma
 
 ## Sprint 0.4 - Minimal Firebase baseline unblock
 
-Objetivo: remover o primeiro bloqueador de baseline sem criar funcionalidades novas e sem alterar UI ou branding.
+Objetivo: remover o bloqueador de Firebase sem alterar comportamento funcional do app.
 
-### Itens propostos
+### Itens
 
-- [ ] Investigar ausencia de `lib/firebase_options.dart` no fork AvareX/NexusEFB.
-- [ ] Confirmar se o AvareX original espera gerar esse arquivo via FlutterFire CLI, commit de arquivo local, secrets de CI ou configuracao externa.
-- [ ] Definir a menor correcao possivel para permitir `flutter analyze` sem alterar comportamento funcional.
-- [ ] Reexecutar GitHub Actions depois da correcao minima.
-- [ ] Documentar resultado de `flutter analyze`, `flutter test` e `flutter build apk --debug`.
+- [x] Inspecionar `lib/main.dart`, `pubspec.yaml`, `.gitignore`, `docs/SPRINT_0_3_REMOTE_VALIDATION.md` e `BACKLOG.md`.
+
+- [x] Criar `lib/firebase_options.dart` com baseline minima no formato esperado pelo FlutterFire.
+  - Arquivo criado no commit `18aa9732c5deae50ea60b19a05d44bff2c674a8f`.
+  - Sem chaves reais de producao.
+  - Apenas placeholders para destravar analyze/build baseline.
+
+- [x] Confirmar que o erro de ausencia de `firebase_options.dart` deixou de acontecer.
+  - `flutter analyze` nao reporta mais `uri_does_not_exist` para `firebase_options.dart`.
+  - `DefaultFirebaseOptions` deixou de ficar indefinido.
+
+- [x] Reexecutar CI remoto apos a correcao.
+  - Run: `https://github.com/cgbbruno1/NexusEFB/actions/runs/27470526551`.
+  - Job: `flutter-ci`.
+
+- [x] Documentar o resultado em `docs/SPRINT_0_4_FIREBASE_BASELINE.md`.
+
+- [ ] Concluir pipeline completo ate `flutter test` e `flutter build apk --debug`.
+  - Bloqueado pelo proximo problema do `flutter analyze`.
+
+### Status final
+
+- Resultado da Sprint 0.4: `FALHOU`.
+- O bloqueador de Firebase foi removido.
+- O proximo bloqueador agora e `integration_test/app_test.dart:19:9 - unused_local_variable`.
+
+## Sprint 0.5 - Analyzer baseline cleanup
+
+Objetivo: corrigir o proximo bloqueador minimo do `flutter analyze` sem alterar funcionalidades.
+
+### Primeiro bloqueador documentado
+
+- [ ] Corrigir `integration_test/app_test.dart:19:9 - unused_local_variable`.
+- [ ] Reexecutar `flutter analyze` no CI apos essa correcao minima.
+- [ ] Somente depois disso, observar se `flutter test` e `flutter build apk --debug` passam ou revelam o proximo bloqueador.
 
 ## Sprint 1 - Fundacao do App
 
