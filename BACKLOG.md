@@ -237,16 +237,54 @@ Objetivo: corrigir o proximo bloqueador minimo do `flutter analyze` sem alterar 
 
 ### Proximo bloqueador documentado
 
-- [ ] Corrigir `integration_test/screenshot_navlog_test.dart:38:14 - use_build_context_synchronously`.
-- [ ] Corrigir `integration_test/screenshot_test.dart:49:14 - use_build_context_synchronously`.
-- [ ] Corrigir `lib/io/adsb_capture.dart:3:8 - unnecessary_import`.
-- [ ] Corrigir `lib/io/adsb_capture.dart:189:26 - unnecessary_brace_in_string_interps`.
+- [x] Corrigir `integration_test/screenshot_navlog_test.dart:38:14 - use_build_context_synchronously`.
+  - Corrigido na Sprint 0.6.
+- [x] Corrigir `integration_test/screenshot_test.dart:49:14 - use_build_context_synchronously`.
+  - Corrigido na Sprint 0.6.
+- [x] Corrigir `lib/io/adsb_capture.dart:3:8 - unnecessary_import`.
+  - Corrigido na Sprint 0.6.
+- [x] Corrigir `lib/io/adsb_capture.dart:189:26 - unnecessary_brace_in_string_interps`.
+  - Corrigido na Sprint 0.6.
 
 ### Status final
 
 - Resultado da Sprint 0.5: `FALHOU`.
 - O bloqueador solicitado foi removido.
 - O proximo passo recomendado e uma Sprint 0.6 focada apenas nos quatro findings restantes do `flutter analyze`.
+
+## Sprint 0.6 - Analyzer info cleanup
+
+Objetivo: corrigir apenas os quatro findings restantes do `flutter analyze` sem alterar funcionalidades.
+
+### Resultado
+
+- [x] Corrigir `integration_test/screenshot_navlog_test.dart:38:14 - use_build_context_synchronously`.
+  - Inserido `if (!ctx.mounted)` antes do uso do contexto apos a lacuna assincrona.
+
+- [x] Corrigir `integration_test/screenshot_test.dart:49:14 - use_build_context_synchronously`.
+  - Inserido `if (!ctx.mounted)` antes do uso do contexto apos a lacuna assincrona.
+
+- [x] Corrigir `lib/io/adsb_capture.dart:3:8 - unnecessary_import`.
+  - Removido apenas `import 'dart:typed_data';`.
+
+- [x] Corrigir `lib/io/adsb_capture.dart:189:26 - unnecessary_brace_in_string_interps`.
+  - Alterado `${_bytesSeenSinceLog}` para `$_bytesSeenSinceLog` sem mudar o texto gerado.
+
+- [ ] Validar `flutter pub get`, `flutter analyze`, `flutter test` e `flutter build apk --debug` no GitHub Actions.
+  - Workflow: `https://github.com/cgbbruno1/NexusEFB/actions/runs/27475368880`.
+  - Job: `flutter-ci` (`81213539749`).
+  - Bloqueado porque o job permaneceu `queued` e nao iniciou a execucao.
+
+### Status final
+
+- Resultado da Sprint 0.6: `FALHOU`.
+- Os quatro findings solicitados foram corrigidos no codigo.
+- A validacao remota nao concluiu porque o GitHub Actions nao saiu de `queued`.
+
+### Proximo bloqueador documentado
+
+- [ ] Desbloquear a execucao do workflow `Flutter CI` no GitHub Actions.
+  - Sem a saida do estado `queued`, nao ha como confirmar o novo resultado de `flutter analyze` nem descobrir o proximo erro real, se existir.
 
 ## Sprint 1 - Fundacao do App
 
