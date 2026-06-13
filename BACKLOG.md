@@ -283,8 +283,57 @@ Objetivo: corrigir apenas os quatro findings restantes do `flutter analyze` sem 
 
 ### Proximo bloqueador documentado
 
-- [ ] Desbloquear a execucao do workflow `Flutter CI` no GitHub Actions.
-  - Sem a saida do estado `queued`, nao ha como confirmar o novo resultado de `flutter analyze` nem descobrir o proximo erro real, se existir.
+- [x] Desbloquear a execucao do workflow `Flutter CI` no GitHub Actions.
+  - Investigado na Sprint 0.7.
+
+## Sprint 0.7 - CI Queue Recovery
+
+Objetivo: destravar a validacao remota do GitHub Actions apos o `Flutter CI` ficar preso em `queued`.
+
+### Resultado
+
+- [x] Confirmar que o run original da Sprint 0.6 continuava travado.
+  - Run `27475368880` / job `81213539749` permaneceu em `queued` por cerca de 45 minutos.
+
+- [x] Cancelar o run travado original.
+  - O run `27475368880` foi cancelado manualmente pela interface do GitHub.
+
+- [x] Executar novo `Flutter CI` manualmente no branch `master`.
+  - Novo run: `27476406835`.
+  - Job: `81216402677` (`flutter-ci`).
+  - Resultado observado: ainda `queued`.
+
+- [x] Verificar configuracoes do repositrio em `Settings > Actions > General`.
+  - `Allow all actions and reusable workflows` estava habilitado.
+  - Actions nao estava desabilitado no nivel do repositorio.
+  - Permissao padrao do workflow permanecia valida para execucao.
+
+- [x] Verificar `Settings > Actions > Runners`.
+  - Nao ha runners self-hosted configurados.
+  - O problema nao decorre de um label privado de runner local.
+
+- [x] Confirmar que havia outros workflows presos em fila.
+  - Foram observados runs `queued` tambem para `Android`, `IOS`, `Windows`, `Arm64-Linux` e `Snap-Linux`.
+
+- [x] Criar workflow minimo de teste para isolar infraestrutura.
+  - Arquivo criado: `.github/workflows/ci-smoke-test.yml`.
+  - Commit: `1ded76241b1b42887b26b32de19c00f5b762d4a2`.
+
+- [x] Executar manualmente o `CI Smoke Test`.
+  - Run: `27477157844`.
+  - Job: `81218447500` (`smoke-test`).
+  - Resultado observado: ainda `queued`.
+
+### Status final
+
+- Resultado da Sprint 0.7: `FALHOU`.
+- O problema de fila/permissao/infraestrutura do GitHub Actions foi confirmado.
+- O bloqueio nao esta no `flutter-ci.yml`, porque o smoke test minimo tambem nao iniciou.
+
+### Proximo bloqueador documentado
+
+- [ ] Verificar limite, billing, quota, concurrency ou restricao de Actions no nivel da conta proprietaria do repositorio.
+  - Com o smoke test minimo tambem em `queued`, o proximo gargalo esta fora do codigo Flutter e fora do workflow Flutter em si.
 
 ## Sprint 1 - Fundacao do App
 
