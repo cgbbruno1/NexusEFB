@@ -146,6 +146,32 @@ Objetivo: desbloquear o ambiente local para permitir clone, Flutter doctor e bui
 - [ ] Executar `flutter pub get`, `flutter analyze`, `flutter test` e `flutter build apk --debug`.
   - Bloqueado porque o repositorio ainda nao foi clonado e Flutter ainda nao executa corretamente.
 
+## Sprint 0.3 — Validacao remota via GitHub Actions
+
+Objetivo: validar o projeto Flutter em ambiente remoto enquanto o PC local permanece bloqueado.
+
+### Itens
+
+- [x] Criar workflow remoto Flutter CI em `.github/workflows/flutter-ci.yml`.
+  - Usa `actions/checkout@v4`.
+  - Usa Java Temurin 17.
+  - Usa Flutter stable `3.35.1`.
+
+- [x] Executar no CI os comandos planejados.
+  - `flutter --version`.
+  - `flutter pub get`.
+  - `flutter analyze`.
+  - `flutter test`.
+  - `flutter build apk --debug`.
+
+- [x] Documentar motivo da validacao remota em `docs/SPRINT_0_3_REMOTE_VALIDATION.md`.
+
+- [ ] Registrar resultado final do GitHub Actions.
+  - Pendente ate o workflow executar e o resultado ser coletado na aba Actions.
+
+- [ ] Corrigir somente build blockers minimos se o CI falhar.
+  - Nenhuma correcao funcional foi feita nesta sprint.
+
 ## Sprint 1 — Fundacao do App
 
 Sem itens nesta tarefa. A Sprint 1 nao deve iniciar antes da Sprint 0 passar.
