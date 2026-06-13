@@ -222,3 +222,147 @@ void main() {
     if (tester.any(fab)) {
       await tester.tap(fab.first);
       await tester.pump(const Duration(milliseconds: 700));
+      await _shot(tester, '17_notes_sheet_picker');
+      final craft = find.text('CRAFT');
+      if (tester.any(craft)) {
+        await tester.tap(craft.first);
+        await tester.pump(const Duration(milliseconds: 700));
+        await _shot(tester, '18_notes_craft');
+      }
+    }
+    navState.pop();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // PLAN tab and actions
+    fab = find.byTooltip('Create a flight plan');
+    if (tester.any(fab)) {
+      await tester.tap(fab);
+      await tester.pump(const Duration(milliseconds: 700));
+      await _shot(tester, '19_plan_tab');
+
+      fab = find.widgetWithText(TextButton, 'Actions');
+      if (tester.any(fab)) {
+        await tester.tap(fab.first);
+        await tester.pump(const Duration(milliseconds: 700));
+        await _shot(tester, '20_plan_actions');
+        // back
+        final back = find.byTooltip('Back');
+        if (tester.any(back)) {
+          await tester.tap(back.first);
+          await tester.pump(const Duration(milliseconds: 400));
+        }
+      }
+
+      // Navigation log button
+      fab = find.byTooltip('Navigation log and terrain');
+      if (!tester.any(fab)) fab = find.byIcon(Icons.analytics_outlined);
+      if (tester.any(fab)) {
+        await tester.tap(fab.first);
+        await tester.pump(const Duration(milliseconds: 900));
+        await Future.delayed(const Duration(milliseconds: 500));
+        await tester.pump(const Duration(milliseconds: 300));
+        await _shot(tester, '21_plan_navlog');
+        final back = find.byTooltip('Back');
+        if (tester.any(back)) {
+          await tester.tap(back.first);
+          await tester.pump(const Duration(milliseconds: 400));
+        }
+      }
+    }
+
+    // FIND tab
+    fab = find.byTooltip('Search for Airports, NavAids, etc.');
+    if (tester.any(fab)) {
+      await tester.tap(fab);
+      await tester.pump(const Duration(milliseconds: 700));
+      await _shot(tester, '22_find_tab');
+
+      final searchField = find.ancestor(
+        of: find.text('Search'),
+        matching: find.byType(TextFormField),
+      );
+      if (tester.any(searchField)) {
+        await tester.enterText(searchField.first, 'KSBA');
+        await tester.pump(const Duration(milliseconds: 400));
+        await Future.delayed(const Duration(seconds: 1));
+        await tester.pump(const Duration(milliseconds: 400));
+        await _shot(tester, '23_find_search_ksba');
+      }
+    }
+
+    // PLATE tab
+    fab = find.byTooltip('Look at approach plates, airport diagrams, CSUP, Minimums, etc.');
+    if (tester.any(fab)) {
+      await tester.tap(fab);
+      await tester.pump(const Duration(milliseconds: 700));
+      await _shot(tester, '24_plate_tab');
+    }
+
+    // Weight & Balance
+    await goRoute('/wnb', '25_weight_balance_screen');
+
+    // Weather / Documents-style route coverage already partly covered; show documents again if needed
+    await goRoute('/documents', '26_documents_screen_repeat');
+
+    // Intro/onboarding capture via separate fresh widget tree
+    Storage().settings.setIntro(true);
+    await tester.pumpWidget(RepaintBoundary(
+      key: _rootKey,
+      child: const MainApp(),
+    ));
+    await tester.pump(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
+    await tester.pump(const Duration(milliseconds: 400));
+    await _shot(tester, '27_intro_welcome');
+
+    // Step through a couple of onboarding pages
+    fab = find.widgetWithIcon(TextButton, Icons.arrow_forward);
+    if (tester.any(fab)) {
+      await tester.tap(fab.first);
+      await tester.pump(const Duration(milliseconds: 600));
+      await _shot(tester, '28_intro_next');
+      if (tester.any(fab)) {
+        await tester.tap(fab.first);
+        await tester.pump(const Duration(milliseconds: 600));
+        await _shot(tester, '29_intro_next_2');
+      }
+    }
+
+    // Restore non-intro for final map shot
+    Storage().settings.setIntro(false);
+    await tester.pumpWidget(RepaintBoundary(
+      key: _rootKey,
+      child: const MainApp(),
+    ));
+    await tester.pump(const Duration(seconds: 2));
+    await _shot(tester, '30_map_after_intro_reset');
+
+    // Optional IO route if available on platform
+    final menu = find.widgetWithText(TextButton, 'Menu');
+    if (tester.any(menu)) {
+      await tester.tap(menu.first);
+      await tester.pump(const Duration(milliseconds: 700));
+      final ioItem = find.text('IO');
+      if (tester.any(ioItem)) {
+        await tester.tap(ioItem.first);
+        await tester.pump(const Duration(milliseconds: 700));
+        await _shot(tester, '31_io_screen');
+        final back = find.byTooltip('Back');
+        if (tester.any(back)) {
+          await tester.tap(back.first);
+          await tester.pump(const Duration(milliseconds: 400));
+        }
+      }
+    }
+
+    // Final map tab shot
+    fab = find.byTooltip('View the maps and overlays');
+    if (tester.any(fab)) {
+      await tester.tap(fab.first);
+      await tester.pump(const Duration(milliseconds: 700));
+      await _shot(tester, '32_map_tab_final');
+    }
+
+    debugPrint('Screenshot test complete. Output dir: ${_outDir.path}');
+  }, timeout: const Timeout(Duration(minutes: 8)));
+}
