@@ -217,11 +217,36 @@ Objetivo: remover o bloqueador de Firebase sem alterar comportamento funcional d
 
 Objetivo: corrigir o proximo bloqueador minimo do `flutter analyze` sem alterar funcionalidades.
 
-### Primeiro bloqueador documentado
+### Resultado
 
-- [ ] Corrigir `integration_test/app_test.dart:19:9 - unused_local_variable`.
-- [ ] Reexecutar `flutter analyze` no CI apos essa correcao minima.
-- [ ] Somente depois disso, observar se `flutter test` e `flutter build apk --debug` passam ou revelam o proximo bloqueador.
+- [x] Corrigir `integration_test/app_test.dart:19:9 - unused_local_variable`.
+  - Correcao aplicada no commit `0978ee2bed72f5137183e5e8c7c34a8fbbf48922`.
+  - A chamada `IntegrationTestWidgetsFlutterBinding.ensureInitialized()` foi preservada.
+  - Nenhuma regra do analyzer foi desabilitada.
+
+- [x] Reexecutar `flutter analyze` no CI apos a correcao minima.
+  - Workflow: `https://github.com/cgbbruno1/NexusEFB/actions/runs/27471523907`.
+  - Job: `flutter-ci`.
+  - Resultado final: `failure`.
+
+- [x] Confirmar que o bloqueador da Sprint 0.5 desapareceu do CI.
+  - O erro `unused_local_variable` nao aparece mais no `flutter analyze`.
+
+- [ ] Concluir pipeline completo ate `flutter test` e `flutter build apk --debug`.
+  - Ainda bloqueado pelo proximo conjunto minimo de findings do analyzer.
+
+### Proximo bloqueador documentado
+
+- [ ] Corrigir `integration_test/screenshot_navlog_test.dart:38:14 - use_build_context_synchronously`.
+- [ ] Corrigir `integration_test/screenshot_test.dart:49:14 - use_build_context_synchronously`.
+- [ ] Corrigir `lib/io/adsb_capture.dart:3:8 - unnecessary_import`.
+- [ ] Corrigir `lib/io/adsb_capture.dart:189:26 - unnecessary_brace_in_string_interps`.
+
+### Status final
+
+- Resultado da Sprint 0.5: `FALHOU`.
+- O bloqueador solicitado foi removido.
+- O proximo passo recomendado e uma Sprint 0.6 focada apenas nos quatro findings restantes do `flutter analyze`.
 
 ## Sprint 1 - Fundacao do App
 
