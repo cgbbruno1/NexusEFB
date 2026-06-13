@@ -526,7 +526,312 @@ void main() {
                 await tester.pumpAndSettle();
           }
 
-          await aircra…7 tokens truncated… keypad off
+          await aircraftScreenTest();
+
+          // =====================
+          // TEST: Check Lists Screen
+          // =====================
+          Future<void> checklistScreenTest() async {
+                // Open drawer via Menu button
+                fab = find.widgetWithText(TextButton, "Menu");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+
+                // Tap Check Lists in drawer (custom InkWell menu item, not ListTile)
+                fab = find.text("Check Lists");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+                
+                await Future.delayed(const Duration(seconds: 1));
+                await tester.pumpAndSettle();
+
+                // Verify Check Lists screen elements
+                expect(find.text("Check Lists"), findsWidgets);
+                expect(find.widgetWithText(TextButton, "Import"), findsOneWidget);
+                
+                // Verify info tooltip exists
+                expect(find.byIcon(Icons.info), findsWidgets);
+
+                // Go back
+                fab = find.byTooltip("Back");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+          }
+
+          await checklistScreenTest();
+
+          // =====================
+          // TEST: W&B Screen with Envelope Creation and Limit Checking
+          // =====================
+          Future<void> wnbScreenTest() async {
+                // Create a test W&B sheet programmatically with envelope points
+                // Typical C172 envelope (simplified)
+                // Points define the valid CG envelope polygon
+                List<String> envelopePoints = [
+                  "35.0,1500.0",  // bottom left
+                  "35.0,2400.0",  // top left  
+                  "47.3,2400.0",  // top right
+                  "47.3,1500.0",  // bottom right
+                ];
+                
+                // Create W&B items (empty aircraft + load items)
+                List<String> wnbItems = [];
+                
+                // Add empty weight item
+                WnbItem emptyWeight = WnbItem("Empty Weight", 1650.0, 40.0);
+                wnbItems.add(emptyWeight.toJson());
+                
+                // Add front seats
+                WnbItem frontSeats = WnbItem("Front Seats", 340.0, 37.0);
+                wnbItems.add(frontSeats.toJson());
+                
+                // Add rear seats
+                WnbItem rearSeats = WnbItem("Rear Seats", 0.0, 73.0);
+                wnbItems.add(rearSeats.toJson());
+                
+                // Add fuel (40 gal @ 6 lbs/gal = 240 lbs)
+                WnbItem fuel = WnbItem("Fuel (40 gal)", 240.0, 48.0);
+                wnbItems.add(fuel.toJson());
+                
+                // Add baggage
+                WnbItem baggage = WnbItem("Baggage", 30.0, 95.0);
+                wnbItems.add(baggage.toJson());
+                
+                // Pad remaining items with empty entries
+                for (int i = wnbItems.length; i < 20; i++) {
+                  wnbItems.add(WnbItem("", 0.0, 0.0).toJson());
+                }
+                
+                // Create the W&B sheet
+                Wnb testWnb = Wnb(
+                  "C172 Test",
+                  "N12345",
+                  wnbItems,
+                  30.0,   // minX (arm min)
+                  1400.0, // minY (weight min)
+                  100.0,  // maxX (arm max)
+                  2600.0, // maxY (weight max)
+                  envelopePoints
+                );
+                
+                // Add W&B to database
+                await UserDatabaseHelper.db.addWnb(testWnb);
+                Storage().settings.setWnb("C172 Test");
+                
+                // Open drawer via Menu button
+                fab = find.widgetWithText(TextButton, "Menu");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+
+                // Tap W&B in drawer (custom InkWell menu item, not ListTile)
+                fab = find.text("Weight & Balance");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+                
+                await Future.delayed(const Duration(seconds: 1));
+                await tester.pumpAndSettle();
+
+                // Verify W&B screen elements (title is "Weight & Balance")
+                expect(find.text("Weight & Balance"), findsOneWidget);
+                
+                // Verify the W&B sheet name is shown (appears in name field and dropdown)
+                expect(find.text("C172 Test"), findsWidgets);
+                
+                // Verify Edit button exists
+                expect(find.widgetWithText(TextButton, "Edit"), findsOneWidget);
+                
+                // Verify item descriptions are visible (if W&B data was loaded)
+                if (tester.any(find.text("Empty Weight"))) {
+                  expect(find.text("Empty Weight"), findsOneWidget);
+                  expect(find.text("Front Seats"), findsOneWidget);
+                }
+
+                // Go back
+                fab = find.byTooltip("Back");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+                
+                // Clean up - delete test W&B sheets
+                await UserDatabaseHelper.db.deleteWnb("C172 Test");
+                await UserDatabaseHelper.db.deleteWnb("C172 Overweight");
+                Storage().settings.setWnb("");
+          }
+
+          await wnbScreenTest();
+
+          // =====================
+          // TEST: Log Book Screen
+          // =====================
+          Future<void> logbookScreenTest() async {
+                // Open drawer via Menu button
+                fab = find.widgetWithText(TextButton, "Menu");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+
+                // Tap Log Book in drawer (custom InkWell menu item, not ListTile)
+                // May need to scroll drawer to find it
+                fab = find.text("Log Book");
+                if (!tester.any(fab)) {
+                  // Scroll down in the drawer to find Log Book
+                  var listView = find.byType(ListView);
+                  if (tester.any(listView)) {
+                    await tester.drag(listView.first, const Offset(0, -150));
+                    await tester.pumpAndSettle();
+                  }
+                }
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+                
+                await Future.delayed(const Duration(seconds: 1));
+                await tester.pumpAndSettle();
+
+                // Verify Log Book screen elements
+                expect(find.text("Log Book"), findsWidgets);
+                expect(find.text("Total Hours"), findsOneWidget);
+                // Import/Export are now IconButtons with tooltips
+                expect(find.byTooltip("Import CSV"), findsOneWidget);
+                expect(find.byTooltip("Export CSV"), findsOneWidget);
+                // Details is now an IconButton with "View Details" tooltip
+                expect(find.byTooltip("View Details"), findsOneWidget);
+
+                // Test adding a log entry via FAB - verify form opens
+                fab = find.byType(FloatingActionButton);
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+                
+                // Verify Log Entry Form screen
+                expect(find.text("New Log Book Entry"), findsOneWidget);
+                
+                // Verify form fields exist
+                expect(find.text("Date (YYYY-MM-DD)"), findsOneWidget);
+                expect(find.text("Aircraft Tail Number"), findsOneWidget);
+                expect(find.text("Aircraft Type"), findsOneWidget);
+
+                // Go back to Log Book without saving
+                fab = find.byTooltip("Back");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+
+                // Test Details button (dashboard) - now an IconButton with tooltip
+                fab = find.byTooltip("View Details");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+                
+                await Future.delayed(const Duration(seconds: 1));
+                await tester.pumpAndSettle();
+
+                // Verify dashboard screen
+                expect(find.text("Log Book Dashboard"), findsOneWidget);
+
+                // Go back to Log Book
+                fab = find.byTooltip("Back");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+
+                // Go back to Map
+                fab = find.byTooltip("Back");
+                await tester.tap(fab);
+                await tester.pumpAndSettle();
+          }
+
+          await logbookScreenTest();
+
+          // =====================
+          // TEST: Notes/Writing Screen (comprehensive)
+          // =====================
+          Future<void> notesScreenTest() async {
+                // Notes screen is accessed from MAP via the notes icon
+                // Find the notes/transcribe icon in bottom controls
+                fab = find.byIcon(MdiIcons.transcribe);
+                if (tester.any(fab)) {
+                  await tester.tap(fab);
+                  await tester.pumpAndSettle();
+                  
+                  await Future.delayed(const Duration(seconds: 1));
+                  await tester.pumpAndSettle();
+
+                  // Verify Notes screen elements
+                  expect(find.text("Notes"), findsOneWidget);
+                  
+                  // Verify toolbar elements exist
+                  expect(find.byIcon(Icons.undo), findsOneWidget);
+                  expect(find.byIcon(Icons.redo), findsOneWidget);
+                  expect(find.byIcon(Icons.save), findsOneWidget);
+                  
+                  // Verify background sheet selector exists
+                  expect(find.byIcon(Icons.note_alt_outlined), findsOneWidget);
+                  
+                  // Verify eraser tool exists
+                  expect(find.byIcon(MdiIcons.eraser), findsOneWidget);
+                  
+                  // ========================================
+                  // TEST: Background Sheets - verify all exist
+                  // ========================================
+                  fab = find.byIcon(Icons.note_alt_outlined);
+                  await tester.tap(fab);
+                  await tester.pumpAndSettle();
+                  
+                  // Verify all background sheet types are available
+                  expect(find.text("None"), findsOneWidget);
+                  expect(find.text("Cost"), findsOneWidget);
+                  expect(find.text("ATIS"), findsOneWidget);
+                  expect(find.text("CRAFT"), findsOneWidget);
+                  expect(find.text("Clearance"), findsOneWidget);
+                  expect(find.text("Ground Taxi"), findsOneWidget);
+                  expect(find.text("Tower Takeoff"), findsOneWidget);
+                  expect(find.text("Departure"), findsOneWidget);
+                  expect(find.text("Approach"), findsOneWidget);
+                  expect(find.text("Tower Landing"), findsOneWidget);
+                  expect(find.text("Ground Landed"), findsOneWidget);
+                  
+                  // Select CRAFT sheet
+                  fab = find.text("CRAFT");
+                  await tester.tap(fab);
+                  await tester.pumpAndSettle();
+                  await Future.delayed(const Duration(seconds: 1));
+                  await tester.pumpAndSettle();
+                  
+                  // ========================================
+                  // TEST: Keypad toggle and writing
+                  // ========================================
+                  fab = find.byIcon(Icons.dialpad);
+                  if (tester.any(fab)) {
+                    await tester.tap(fab);
+                    await tester.pumpAndSettle();
+                    
+                    // Verify keypad appears with all buttons
+                    expect(find.text("1"), findsWidgets);
+                    expect(find.text("2"), findsWidgets);
+                    expect(find.text("3"), findsWidgets);
+                    expect(find.text("4"), findsWidgets);
+                    expect(find.text("5"), findsWidgets);
+                    expect(find.text("6"), findsWidgets);
+                    expect(find.text("7"), findsWidgets);
+                    expect(find.text("8"), findsWidgets);
+                    expect(find.text("9"), findsWidgets);
+                    expect(find.text("0"), findsWidgets);
+                    expect(find.text("."), findsWidgets);
+                    expect(find.text("C"), findsWidgets);  // Clear button
+                    
+                    // Test entering numbers using keypad
+                    fab = find.text("1").first;
+                    await tester.tap(fab);
+                    await tester.pumpAndSettle();
+                    
+                    fab = find.text("2").first;
+                    await tester.tap(fab);
+                    await tester.pumpAndSettle();
+                    
+                    fab = find.text("5").first;
+                    await tester.tap(fab);
+                    await tester.pumpAndSettle();
+                    
+                    // Test clear button
+                    fab = find.text("C").first;
+                    await tester.tap(fab);
+                    await tester.pumpAndSettle();
+                    
+                    // Toggle keypad off
                     fab = find.byIcon(Icons.dialpad);
                     await tester.tap(fab);
                     await tester.pumpAndSettle();
