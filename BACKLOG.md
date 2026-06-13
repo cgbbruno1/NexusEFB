@@ -48,7 +48,7 @@ Objetivo: validar o estado inicial do fork AvareX e garantir que o projeto compi
 - [ ] Confirmar app original AvareX abrindo localmente sem modificacoes.
   - Bloqueado ate clone, Flutter e Android toolchain funcionarem.
 
-## Sprint 0.1 — Correcao do ambiente local
+## Sprint 0.1 - Correcao do ambiente local
 
 Objetivo: preparar o PC para clonar, rodar Flutter e validar o build do fork AvareX/NexusEFB.
 
@@ -108,7 +108,7 @@ Objetivo: preparar o PC para clonar, rodar Flutter e validar o build do fork Ava
 - [ ] Executar `flutter build apk --debug`.
   - Bloqueado porque o checkout local nao existe.
 
-## Sprint 0.2 — Recuperacao manual do ambiente Windows
+## Sprint 0.2 - Recuperacao manual do ambiente Windows
 
 Objetivo: desbloquear o ambiente local para permitir clone, Flutter doctor e build Android debug.
 
@@ -146,7 +146,7 @@ Objetivo: desbloquear o ambiente local para permitir clone, Flutter doctor e bui
 - [ ] Executar `flutter pub get`, `flutter analyze`, `flutter test` e `flutter build apk --debug`.
   - Bloqueado porque o repositorio ainda nao foi clonado e Flutter ainda nao executa corretamente.
 
-## Sprint 0.3 — Validacao remota via GitHub Actions
+## Sprint 0.3 - Validacao remota via GitHub Actions
 
 Objetivo: validar o projeto Flutter em ambiente remoto enquanto o PC local permanece bloqueado.
 
@@ -157,49 +157,70 @@ Objetivo: validar o projeto Flutter em ambiente remoto enquanto o PC local perma
   - Usa Java Temurin 17.
   - Usa Flutter stable `3.35.1`.
 
-- [x] Executar no CI os comandos planejados.
-  - `flutter --version`.
-  - `flutter pub get`.
-  - `flutter analyze`.
-  - `flutter test`.
-  - `flutter build apk --debug`.
+- [x] Executar manualmente o workflow `Flutter CI` no branch `master`.
+  - Run: `https://github.com/cgbbruno1/NexusEFB/actions/runs/27470320265`.
+  - Job: `flutter-ci`.
+  - Resultado final: `failure`.
 
-- [x] Documentar motivo da validacao remota em `docs/SPRINT_0_3_REMOTE_VALIDATION.md`.
+- [x] Confirmar que o ambiente remoto instalou Flutter e resolveu dependencias.
+  - `flutter --version`: passou com Flutter `3.35.1` e Dart `3.9.0`.
+  - `flutter pub get`: passou com avisos de dependencias desatualizadas/incompativeis com constraints.
 
-- [ ] Registrar resultado final do GitHub Actions.
-  - Pendente ate o workflow executar e o resultado ser coletado na aba Actions.
+- [x] Registrar resultado final do GitHub Actions em `docs/SPRINT_0_3_REMOTE_VALIDATION.md`.
 
-- [ ] Corrigir somente build blockers minimos se o CI falhar.
-  - Nenhuma correcao funcional foi feita nesta sprint.
+- [x] Identificar primeiro bloqueador real.
+  - `flutter analyze` falhou porque `lib/main.dart` importa `firebase_options.dart`, mas `lib/firebase_options.dart` nao existe no repositorio.
+  - `DefaultFirebaseOptions` fica indefinido.
 
-## Sprint 1 — Fundacao do App
+- [ ] Executar `flutter test` no CI.
+  - Pulado porque `flutter analyze` falhou.
+
+- [ ] Executar `flutter build apk --debug` no CI.
+  - Pulado porque `flutter analyze` falhou.
+
+- [ ] Corrigir somente build blockers minimos se aprovado em sprint propria.
+  - Nenhuma correcao funcional foi feita na Sprint 0.3.
+
+## Sprint 0.4 - Minimal Firebase baseline unblock
+
+Objetivo: remover o primeiro bloqueador de baseline sem criar funcionalidades novas e sem alterar UI ou branding.
+
+### Itens propostos
+
+- [ ] Investigar ausencia de `lib/firebase_options.dart` no fork AvareX/NexusEFB.
+- [ ] Confirmar se o AvareX original espera gerar esse arquivo via FlutterFire CLI, commit de arquivo local, secrets de CI ou configuracao externa.
+- [ ] Definir a menor correcao possivel para permitir `flutter analyze` sem alterar comportamento funcional.
+- [ ] Reexecutar GitHub Actions depois da correcao minima.
+- [ ] Documentar resultado de `flutter analyze`, `flutter test` e `flutter build apk --debug`.
+
+## Sprint 1 - Fundacao do App
 
 Sem itens nesta tarefa. A Sprint 1 nao deve iniciar antes da Sprint 0 passar.
 
-## Sprint 2 — SQLite Offline First
+## Sprint 2 - SQLite Offline First
 
 Sem itens nesta tarefa.
 
-## Sprint 3 — Cadastro de Aeronaves
+## Sprint 3 - Cadastro de Aeronaves
 
 Sem itens nesta tarefa.
 
-## Sprint 4 — Logbook Basico
+## Sprint 4 - Logbook Basico
 
 Sem itens nesta tarefa.
 
-## Sprint 5 — Cartas Offline
+## Sprint 5 - Cartas Offline
 
 Sem itens nesta tarefa.
 
-## Sprint 6 — Plano de Voo
+## Sprint 6 - Plano de Voo
 
 Sem itens nesta tarefa.
 
-## Sprint 7 — METAR/TAF/NOTAM
+## Sprint 7 - METAR/TAF/NOTAM
 
 Sem itens nesta tarefa.
 
-## Sprint 8 — Moving Map
+## Sprint 8 - Moving Map
 
 Sem itens nesta tarefa.
