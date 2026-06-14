@@ -335,9 +335,76 @@ Objetivo: destravar a validacao remota do GitHub Actions apos o `Flutter CI` fic
 - [ ] Verificar limite, billing, quota, concurrency ou restricao de Actions no nivel da conta proprietaria do repositorio.
   - Com o smoke test minimo tambem em `queued`, o proximo gargalo esta fora do codigo Flutter e fora do workflow Flutter em si.
 
-## Sprint 1 - Fundacao do App
+## Sprint 1.0 - Modular App Foundation
 
-Sem itens nesta tarefa. A Sprint 1 nao deve iniciar antes da Sprint 0 passar.
+Objetivo: criar a fundacao arquitetural minima, modular e nao intrusiva para o NexusEFB sem iniciar funcionalidades do MVP e sem alterar o comportamento atual do app.
+
+### Itens concluidos
+
+- [x] Inspecionar `pubspec.yaml`, `lib/main.dart`, `lib/firebase_options.dart`, `analysis_options.yaml`, `lib/`, `tests/`, `integration_test/`, `.github/workflows/flutter-ci.yml`, `BACKLOG.md`, `docs/TECHNICAL_BASELINE.md` e `docs/SPRINT_0_7_CI_QUEUE_RECOVERY.md`.
+
+- [x] Criar baseline modular em `lib/core/` e `lib/features/`.
+  - `lib/core/database/app_database.dart`
+  - `lib/core/errors/app_exception.dart`
+  - `lib/core/providers/database_provider.dart`
+  - `lib/features/aircraft/...`
+  - `lib/features/logbook/...`
+  - `lib/features/flight_plan/...`
+  - `lib/features/weather/...`
+  - `lib/features/offline_charts/...`
+  - `lib/features/moving_map/...`
+
+- [x] Adicionar Riverpod como dependencia minima de fundacao.
+  - `flutter_riverpod` foi adicionado ao `pubspec.yaml`.
+  - `sqflite` e `path` ja existiam no projeto.
+
+- [x] Criar baseline minima de SQLite.
+  - Banco `nexus_efb.db`
+  - Versao `1`
+  - Tabelas tecnicas: `aircraft`, `logbook_entries`
+
+- [x] Criar modelos de dominio minimos.
+  - `Aircraft`
+  - `LogbookEntry`
+
+- [x] Criar contratos de repositorio.
+  - `AircraftRepository`
+  - `LogbookRepository`
+
+- [x] Criar providers Riverpod minimos sem tocar na UI.
+  - `appDatabaseProvider`
+  - `aircraftRepositoryProvider`
+  - `logbookRepositoryProvider`
+
+- [x] Criar testes unitarios minimos para modelos de dominio.
+  - `test/features/aircraft/domain/aircraft_test.dart`
+  - `test/features/logbook/domain/logbook_entry_test.dart`
+
+- [x] Atualizar documentacao.
+  - `docs/SPRINT_1_0_MODULAR_APP_FOUNDATION.md`
+  - `docs/TECHNICAL_BASELINE.md`
+  - `BACKLOG.md`
+
+### Itens pendentes
+
+- [ ] Executar `flutter pub get` em ambiente valido.
+- [ ] Executar `flutter analyze` em ambiente valido.
+- [ ] Executar `flutter test` em ambiente valido.
+- [ ] Executar `flutter build apk --debug` em ambiente valido ou documentar a primeira falha real do build.
+- [ ] Atualizar `pubspec.lock` apos `flutter pub get` real.
+- [ ] Decidir a primeira sprint de implementacao concreta sobre `aircraft` ou `logbook` depois que o ambiente voltar a validar.
+
+### Status final
+
+- Resultado da Sprint 1.0: `FALHOU`.
+- A fundacao modular foi criada no repositorio.
+- A validacao obrigatoria nao foi concluida por bloqueio de ambiente.
+
+### Proximo bloqueador documentado
+
+- [ ] Recuperar um ambiente executavel para validacao Flutter.
+  - No Codex local, `flutter --version` continuou travando antes de `pub get` e `analyze`.
+  - No GitHub Actions, o bloqueio anterior de jobs presos em `queued` ainda impede confiar na validacao remota.
 
 ## Sprint 2 - SQLite Offline First
 
