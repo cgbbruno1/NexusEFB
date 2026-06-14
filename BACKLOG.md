@@ -433,3 +433,59 @@ Sem itens nesta tarefa.
 ## Sprint 8 - Moving Map
 
 Sem itens nesta tarefa.
+
+## Sprint 1.1 - Validation Recovery
+
+Objetivo: recuperar uma forma confiavel de validar o projeto depois da Sprint 1.0, sem criar funcionalidades novas e sem alterar comportamento do app.
+
+### Itens concluidos
+
+- [x] Confirmar o estado do Flutter local.
+  - `where flutter` e `where dart` resolvem para `C:\src\flutter\bin`.
+  - `flutter --version` e `dart --version` travam sem retorno util.
+
+- [x] Identificar o primeiro erro local real.
+  - Execucao direta do Flutter tools falha com `Flutter failed to open a file at "C:\src\flutter\bin\cache\lockfile"`.
+  - O problema esta no ambiente local, nao no codigo do app.
+
+- [x] Confirmar que o Dart embutido ainda responde.
+  - `C:\src\flutter\bin\cache\dart-sdk\bin\dart.exe --version` retornou Dart `3.5.3`.
+  - Isso indica que o executavel do Dart existe, mas os wrappers locais nao estao confiaveis.
+
+- [x] Verificar o estado atual do GitHub Actions.
+  - A pagina geral de Actions ainda mostra varios runs `queued` para `Flutter CI`, `Android`, `IOS`, `Windows`, `Arm64-Linux` e `Snap-Linux`.
+  - O `Flutter CI #53` (`27501348750`) continuava `queued` no momento da inspecao.
+
+- [x] Confirmar que GitHub Actions nao esta totalmente indisponivel.
+  - `CI Smoke Test #1` (`27477157844`) apareceu como `completed successfully`.
+  - Isso mostra que ha execucao remota possivel, embora a fila continue instavel.
+
+- [x] Recuperar um resultado remoto real do `Flutter CI`.
+  - Run inspecionado: `27501066717`.
+  - Job: `81283916972`.
+  - `flutter pub get`: passou.
+  - `flutter analyze`: passou com `No issues found!`.
+  - `flutter test`: falhou com `Test directory "test" not found.`.
+
+### Itens pendentes
+
+- [ ] Validar o `master` atual do repositorio em um run novo e completo do `Flutter CI`.
+  - Os runs mais novos continuam em `queued`, entao o estado atual do `master` ainda nao esta validado ponta a ponta.
+
+- [ ] Executar `flutter build apk --debug` em um ambiente confiavel.
+  - Nem o ambiente local nem o `Flutter CI` mais recente chegaram a esse passo.
+
+- [ ] Escolher um ambiente alternativo unico para validacao confiavel.
+  - Recomendacao atual: GitHub Codespaces antes de insistir no Flutter local quebrado.
+
+### Status final
+
+- Resultado da Sprint 1.1: `BLOQUEADA`.
+- Houve recuperacao parcial da validacao remota.
+- O bloqueio principal continua sendo a instalacao local do Flutter e a fila irregular dos workflows mais novos.
+
+### Proximo bloqueador documentado
+
+- [ ] Validar o `master` atual em ambiente limpo ou em um unico run remoto concluido.
+  - Se esse run falhar por codigo, corrigir apenas o primeiro erro real.
+  - Se continuar falhando por ambiente, mover a validacao para GitHub Codespaces ou outro ambiente limpo.
