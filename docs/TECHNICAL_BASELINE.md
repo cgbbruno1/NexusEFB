@@ -1,6 +1,6 @@
 # Technical Baseline
 
-Date: 2026-06-13
+Date: 2026-06-14
 
 Repository: `cgbbruno1/NexusEFB`
 
@@ -8,34 +8,31 @@ Origin fork: `apps4av/avarex`
 
 ## Current Project Structure
 
-The repository is a Flutter project with package name `avaremp` and app branding still aligned with AvareX. No NexusEFB branding changes have been made in Sprint 0.
+The repository is a Flutter project with package name `avaremp` and app branding still aligned with AvareX. No NexusEFB branding changes have been made in Sprint 0 or Sprint 1.0.
 
-The repository could not be cloned locally in this environment, so this baseline is based on the GitHub repository metadata and `pubspec.yaml` content read from the fork.
+The current codebase still uses the legacy AvareX folder structure for active app behavior, while a new modular baseline has now been added in parallel for future NexusEFB work.
 
 ## Main Folders Identified
 
-Expected Flutter project folders and files from the fork/upstream layout:
+Top-level repository folders currently identified:
 
 - `.github/` - GitHub Actions workflows.
 - `android/` - Android project.
+- `assets/` - Images, documents and audio assets.
+- `docs/` - Sprint and baseline documentation.
+- `integration_test/` - Flutter integration tests.
 - `ios/` - iOS project.
-- `web/` - Web target.
+- `lib/` - Dart and Flutter application source.
 - `linux/` - Linux desktop target.
 - `macos/` - macOS desktop target.
+- `snap/` - Snap packaging.
+- `tests/` - Legacy binary and Python-based test assets.
+- `web/` - Web target.
 - `windows/` - Windows desktop target.
-- `lib/` - Dart/Flutter application source.
-- `assets/images/` - Image assets.
-- `assets/docs/` - Document assets.
-- `assets/audio/traffic_alerts/` - Traffic alert audio assets.
-- `assets/audio/gpws/` - GPWS audio assets.
-- `assets/audio/runway_incursion/` - Runway incursion audio assets.
-- `integration_test/` - Integration tests.
-- `pubspec.yaml` - Flutter package definition.
-- `analysis_options.yaml` - Dart analyzer/lint configuration.
 
 ## Platforms Present
 
-Based on repository metadata and `pubspec.yaml`/workflow inspection, the project targets:
+Based on repository metadata and workflow inspection, the project targets:
 
 - Android
 - iOS
@@ -43,7 +40,7 @@ Based on repository metadata and `pubspec.yaml`/workflow inspection, the project
 - Linux
 - macOS
 - Windows
-- Raspberry Pi / Linux arm64 through workflow artifact builds
+- Raspberry Pi / Linux arm64 through workflow builds
 
 ## Flutter and Dart Requirements
 
@@ -54,19 +51,19 @@ environment:
   sdk: '>=3.2.0 <4.0.0'
 ```
 
-Upstream/fork workflows use Flutter stable `3.35.1` for the main platform builds.
+The repository workflow uses Flutter stable `3.35.1` in `flutter-ci.yml`.
 
-Local environment discovered during Sprint 0:
+Local Codex environment observations during Sprint 1.0:
 
-- Flutter path: `C:\src\flutter\bin\flutter.bat`
-- Flutter SDK version file: `3.24.3`
-- Dart direct SDK: `3.5.3`
-- Java: Temurin JDK `17.0.17`
+- `where flutter` resolves to `C:\src\flutter\bin\flutter.bat`
+- `flutter --version` still hangs in the local environment
+- no usable local checkout of the repository is available inside the Codex sandbox
 
 ## Main Dependencies
 
-Main dependencies declared in `pubspec.yaml` include:
+Main dependencies declared in `pubspec.yaml` now include:
 
+- `flutter_riverpod`
 - `sqflite`
 - `sqflite_common_ffi`
 - `sqflite_common_ffi_web`
@@ -115,10 +112,10 @@ Main dependencies declared in `pubspec.yaml` include:
 
 Git dependencies declared:
 
-- `msvcredist` from `https://github.com/insertjokehere/flutter_msvcredist.git`, ref `main`.
-- `msix` from `https://github.com/insertjokehere/msix.git`, ref `msvc_redist`.
+- `msvcredist` from `https://github.com/insertjokehere/flutter_msvcredist.git`
+- `msix` from `https://github.com/insertjokehere/msix.git`
 
-Development dependencies:
+Development dependencies declared:
 
 - `flutter_test`
 - `flutter_lints`
@@ -127,45 +124,111 @@ Development dependencies:
 
 ## Technical Observations
 
-- The fork currently preserves AvareX package metadata: `name: avaremp`, `version: 0.0.106+106`.
-- `msix_config` still uses AvareX identity values. This is expected for Sprint 0 and must not be changed yet.
-- The project depends on Firebase and RevenueCat-related packages; local builds may require generated Firebase option files or placeholder configuration depending on target and feature flags.
-- Android workflows run `flutterfire configure` in CI using repository secrets.
-- Windows workflows build with `flutter build windows --release` and then run `dart run msix:create`.
-- Android workflows build both APK and AAB.
-- Linux/Snap workflows install native packages for GTK, GStreamer, WebKitGTK, CMake, Ninja, and related desktop dependencies.
+- The fork still preserves AvareX package metadata: `name: avaremp`, `version: 0.0.106+106`.
+- `msix_config` still uses AvareX identity values.
+- `lib/main.dart` remains wired to the legacy app structure and routes.
+- Firebase options remain a temporary baseline file created in Sprint 0.4.
+- Riverpod was added only as modular infrastructure support in Sprint 1.0.
+- No new screens, routes or feature wiring were added in Sprint 1.0.
 
-## Environment Issues Found During Sprint 0
+## Modular Architecture Baseline
 
-- `git` is missing from PATH.
-- Terminal HTTPS access to GitHub failed with `Bad access`.
-- Flutter wrapper hangs on `flutter --version`.
-- Direct Flutter tool execution fails on `C:\src\flutter\bin\cache\lockfile`.
-- Installed Flutter is `3.24.3`, older than the `3.35.1` version used by project workflows.
-- Android SDK exists locally but Android environment variables and PATH entries are incomplete.
-- Visual Studio Build Tools 2022 exists and works when loaded through `VsDevCmd.bat`; it is not available in a plain shell PATH.
+Sprint 1.0 added a non-invasive modular baseline alongside the existing legacy structure.
+
+### New core structure
+
+```text
+lib/core/
+  database/
+  errors/
+  providers/
+```
+
+Implemented files:
+
+- `lib/core/database/app_database.dart`
+- `lib/core/errors/app_exception.dart`
+- `lib/core/providers/database_provider.dart`
+
+### New feature structure
+
+```text
+lib/features/
+  aircraft/
+    data/
+    domain/
+    presentation/
+  logbook/
+    data/
+    domain/
+    presentation/
+  flight_plan/
+    data/
+    domain/
+    presentation/
+  weather/
+    data/
+    domain/
+    presentation/
+  offline_charts/
+    data/
+    domain/
+    presentation/
+  moving_map/
+    data/
+    domain/
+    presentation/
+```
+
+Concrete Sprint 1.0 files were limited to infrastructure and domain baseline:
+
+- `Aircraft` model
+- `LogbookEntry` model
+- `AircraftRepository` contract
+- `LogbookRepository` contract
+- placeholder Riverpod providers for repository wiring
+- `.gitkeep` placeholders for empty directories
+
+### Database baseline
+
+A minimal SQLite baseline was introduced with:
+
+- database name: `nexus_efb.db`
+- version: `1`
+- baseline tables: `aircraft`, `logbook_entries`
+
+This is infrastructure only. No CRUD, sync, UI or MVP workflow was implemented.
+
+### Test baseline
+
+A new `test/` tree was added for Dart unit tests, while legacy `tests/` remains untouched.
+
+Added tests:
+
+- `test/features/aircraft/domain/aircraft_test.dart`
+- `test/features/logbook/domain/logbook_entry_test.dart`
 
 ## MVP NexusEFB Risk Points
 
-These are only risk notes. No MVP implementation is part of Sprint 0.
+These remain baseline risk notes only.
 
-- Build reproducibility must be solved before any branding or feature work.
-- Git dependencies require working HTTPS access from the development machine.
-- Firebase and RevenueCat initialization paths may affect local testability.
-- Multi-platform plugin registrations can be fragile when dependencies are updated.
-- Windows build requires the correct Visual Studio developer environment.
-- Android build requires complete Android SDK PATH and license setup.
-- Flutter version drift between local and CI can produce dependency resolution differences.
+- Build reproducibility is still unresolved in the Codex local environment.
+- GitHub Actions remote validation remains blocked by queued runners at repository/account level.
+- `pubspec.lock` could not be refreshed after adding Riverpod because `flutter pub get` could not be executed in a usable environment.
+- The project now contains both legacy and modular structures, which is intentional, but future sprints need discipline on where new code lives.
+- Firebase and RevenueCat initialization paths may continue to complicate local validation.
 
 ## Baseline Status
 
-The codebase remains unmodified from the fork baseline except for Sprint 0 documentation files.
+The repository now contains a modular architecture baseline in addition to the original fork structure.
 
-The technical baseline cannot be marked build-validated until the environment can clone the repository and execute:
+However, this baseline is not yet build-validated because the current environment still cannot reliably execute:
 
-```powershell
+```text
 flutter pub get
 flutter analyze
 flutter test
 flutter build apk --debug
 ```
+
+The first real blocker for Sprint 1.0 validation remains the local Codex Flutter environment hanging before usable execution, while remote GitHub Actions remains blocked by queued jobs.
