@@ -53,10 +53,15 @@ environment:
 
 The repository workflow uses Flutter stable `3.35.1` in `flutter-ci.yml`.
 
-Local Codex environment observations during Sprint 1.0:
+Local Codex environment observations through Sprint 1.1:
 
 - `where flutter` resolves to `C:\src\flutter\bin\flutter.bat`
-- `flutter --version` still hangs in the local environment
+- `where dart` resolves to `C:\src\flutter\bin\dart.bat`
+- `flutter --version` hangs in the local environment
+- `dart --version` hangs in the local environment
+- direct execution of `C:\src\flutter\bin\cache\dart-sdk\bin\dart.exe --version` works and reports Dart `3.5.3`
+- direct Flutter tools invocation fails on `C:\src\flutter\bin\cache\lockfile`
+- `C:\src\flutter\version` reports local Flutter `3.24.3`
 - no usable local checkout of the repository is available inside the Codex sandbox
 
 ## Main Dependencies
@@ -130,6 +135,9 @@ Development dependencies declared:
 - Firebase options remain a temporary baseline file created in Sprint 0.4.
 - Riverpod was added only as modular infrastructure support in Sprint 1.0.
 - No new screens, routes or feature wiring were added in Sprint 1.0.
+- Remote validation was partially recovered in Sprint 1.1: one completed `Flutter CI` run reached `flutter pub get`, `flutter analyze` and `flutter test`.
+- That recovered CI run passed `flutter analyze` with `No issues found!`.
+- The first real CI failure in that recovered run was `flutter test` failing because `test/` did not exist in the inspected historical commit.
 
 ## Modular Architecture Baseline
 
@@ -213,8 +221,9 @@ Added tests:
 These remain baseline risk notes only.
 
 - Build reproducibility is still unresolved in the Codex local environment.
-- GitHub Actions remote validation remains blocked by queued runners at repository/account level.
-- `pubspec.lock` could not be refreshed after adding Riverpod because `flutter pub get` could not be executed in a usable environment.
+- The local Flutter installation is not reliable: wrapper commands hang and direct Flutter tools fail on `bin/cache/lockfile`.
+- GitHub Actions is not fully offline, but current `Flutter CI` runs for the latest `master` head are still accumulating in `queued` state.
+- `pubspec.lock` could not be refreshed after adding Riverpod because no fully trusted current-head validation environment has completed yet.
 - The project now contains both legacy and modular structures, which is intentional, but future sprints need discipline on where new code lives.
 - Firebase and RevenueCat initialization paths may continue to complicate local validation.
 
@@ -222,13 +231,11 @@ These remain baseline risk notes only.
 
 The repository now contains a modular architecture baseline in addition to the original fork structure.
 
-However, this baseline is not yet build-validated because the current environment still cannot reliably execute:
+Current validation status after Sprint 1.1:
 
-```text
-flutter pub get
-flutter analyze
-flutter test
-flutter build apk --debug
-```
+- local validation is blocked by the broken local Flutter installation;
+- remote validation is partially recovered;
+- `flutter analyze` has passed in a real remote run;
+- current `master` head is still not fully validated end to end because the newest `Flutter CI` runs remain queued.
 
-The first real blocker for Sprint 1.0 validation remains the local Codex Flutter environment hanging before usable execution, while remote GitHub Actions remains blocked by queued jobs.
+The next trustworthy validation target should be either a clean GitHub Codespaces environment or a single fresh `Flutter CI` run for the latest `master` commit.
