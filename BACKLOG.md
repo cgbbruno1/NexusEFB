@@ -489,3 +489,42 @@ Objetivo: recuperar uma forma confiavel de validar o projeto depois da Sprint 1.
 - [ ] Validar o `master` atual em ambiente limpo ou em um unico run remoto concluido.
   - Se esse run falhar por codigo, corrigir apenas o primeiro erro real.
   - Se continuar falhando por ambiente, mover a validacao para GitHub Codespaces ou outro ambiente limpo.
+
+## Sprint 1.2 - App Launch Smoke Test
+
+Objetivo: tentar ver o app atual rodando, validando se ele compila, gera APK debug e abre sem crash.
+
+### Itens concluidos
+
+- [x] Tentar confirmar o estado local do repositorio.
+  - `git status`, `git branch --show-current` e `git rev-parse HEAD` falharam porque `git` nao esta disponivel no terminal local.
+  - O estado local do checkout nao pode ser lido por comando Git nesta sessao.
+
+- [x] Tentar validar o ambiente Flutter para launch test.
+  - `flutter --version` travou sem saida util.
+  - `dart --version` travou sem saida util.
+  - `flutter doctor -v` travou sem saida util.
+
+- [x] Confirmar o primeiro erro real que continua bloqueando o smoke test.
+  - O erro raiz continua sendo o mesmo da Sprint 1.1: acesso ao `C:\src\flutter\bin\cache\lockfile`.
+  - O bloqueio permanece no ambiente local, nao no app.
+
+### Itens pendentes
+
+- [ ] Executar `flutter pub get` em ambiente que permita iniciar o Flutter.
+- [ ] Executar `flutter analyze` em ambiente que permita iniciar o Flutter.
+- [ ] Executar `flutter test` em ambiente que permita iniciar o Flutter.
+- [ ] Executar `flutter build apk --debug` e verificar se o APK `build/app/outputs/flutter-apk/app-debug.apk` e gerado.
+- [ ] Executar `flutter devices` e `flutter run`, ou instalar o APK manualmente, para observar a tela inicial e qualquer crash real de runtime.
+
+### Status final
+
+- Resultado da Sprint 1.2: `BLOQUEADA`.
+- Nenhum build ou launch real do app foi possivel nesta sessao.
+- O bloqueio permanece antes de `pub get`, `build` e `run`.
+
+### Proximo bloqueador documentado
+
+- [ ] Recuperar um ambiente local ou alternativo capaz de iniciar o Flutter sem travar.
+  - Sem isso, o smoke test de build e launch continua impossivel.
+  - Caminho recomendado: GitHub Codespaces, outra maquina limpa ou reparo completo da instalacao local do Flutter.
