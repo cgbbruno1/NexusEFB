@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#081A2C" />
+        </shape>
+    </item>
+    <item android:left="12dp" android:top="12dp" android:right="12dp" android:bottom="12dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp" />
+            <solid android:color="#4C6075" />
+            <stroke android:width="6dp" android:color="#00A8E8" />
+        </shape>
+    </item>
+    <item android:left="30dp" android:top="24dp" android:right="62dp" android:bottom="24dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp" />
+            <solid android:color="#F5F8FA" />
+        </shape>
+    </item>
+    <item android:left="62dp" android:top="24dp" android:right="30dp" android:bottom="24dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp" />
+            <solid android:color="#F5F8FA" />
+        </shape>
+    </item>
+    <item android:left="46dp" android:top="28dp" android:right="46dp" android:bottom="28dp">
+        <rotate android:fromDegrees="-32" android:pivotX="50%" android:pivotY="50%" android:toDegrees="-32">
+            <shape android:shape="rectangle">
+                <corners android:radius="4dp" />
+                <solid android:color="#F5F8FA" />
+            </shape>
+        </rotate>
+    </item>
+    <item android:left="26dp" android:right="26dp" android:bottom="14dp" android:height="14dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#00A8E8" />
+        </shape>
+    </item>
+</layer-list>
