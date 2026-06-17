@@ -528,3 +528,22 @@ Objetivo: tentar ver o app atual rodando, validando se ele compila, gera APK deb
 - [ ] Recuperar um ambiente local ou alternativo capaz de iniciar o Flutter sem travar.
   - Sem isso, o smoke test de build e launch continua impossivel.
   - Caminho recomendado: GitHub Codespaces, outra maquina limpa ou reparo completo da instalacao local do Flutter.
+
+## Demo / Comercial
+
+### Demo Branding Preview
+
+- Branch: `demo/branding-preview`
+- Status: `BLOQUEADA`
+- Escopo: trocar apenas branding visivel e metadados para uma build demonstravel do NexusEFB.
+- Entregue nesta sprint:
+  - nome exibido atualizado para `NexusEFB` em Android, iOS e Web;
+  - placeholder de branding em `assets/branding/`;
+  - launcher icon Android trocado para drawable de demo;
+  - manifest e favicon Web apontados para branding de demo;
+  - documentacao criada em `docs/demo/DEMO_BRANDING_PREVIEW.md`.
+- Nao faz parte do MVP funcional.
+- Bloqueador atual:
+  - sem `git` local nesta sessao;
+  - `flutter --version` e `dart --version` continuam travando por timeout;
+  - `flutter pub get`, `flutter analyze`, `flutter test` e `flutter build apk --debug` nao puderam ser validados localmente.
