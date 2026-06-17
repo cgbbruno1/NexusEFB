@@ -1,0 +1,8 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">NexusEFB placeholder logo</title>
+  <desc id="desc">Temporary branding preview icon for NexusEFB demo builds.</desc>
+  <rect width="1024" height="1024" rx="0" fill="#081A2C"/>
+  <rect x="108" y="108" width="808" height="808" rx="144" fill="#4C6075" stroke="#00A8E8" stroke-width="60"/>
+  <path d="M402 322H475L608 538V322H673V702H601L467 485V702H402V322Z" fill="#F5F8FA"/>
+  <rect x="260" y="758" width="504" height="96" rx="0" fill="#00A8E8"/>
+</svg>
