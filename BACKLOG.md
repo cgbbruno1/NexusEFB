@@ -547,3 +547,15 @@ Objetivo: tentar ver o app atual rodando, validando se ele compila, gera APK deb
   - sem `git` local nesta sessao;
   - `flutter --version` e `dart --version` continuam travando por timeout;
   - `flutter pub get`, `flutter analyze`, `flutter test` e `flutter build apk --debug` nao puderam ser validados localmente.
+
+### Demo 0.2 - Branding Preview Build Validation
+
+- Branch: `demo/branding-preview`
+- Commit alvo: `7c2afde9c2d5006d44a24c65885c1eed6148406d`
+- Status: `BLOQUEADA`
+- Resultado real:
+  - nao houve ambiente limpo executavel acessivel nesta sessao;
+  - nao foi possivel executar `git status`, `flutter --version`, `dart --version`, `flutter doctor -v`, `flutter pub get`, `flutter analyze`, `flutter test` ou `flutter build apk --debug` em checkout limpo;
+  - nao foi encontrado workflow run associado ao commit alvo durante esta verificacao.
+- Proximo bloqueador:
+  - abrir a branch em GitHub Codespaces, outro PC limpo, WSL limpo ou maquina cloud com Flutter e Android SDK funcionais para concluir build e instalacao Android.
