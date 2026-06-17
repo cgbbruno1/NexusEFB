@@ -1,0 +1,8 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">NexusEFB dark placeholder logo</title>
+  <desc id="desc">Temporary dark placeholder branding preview icon for NexusEFB demo builds.</desc>
+  <rect width="1024" height="1024" fill="#160606"/>
+  <rect x="108" y="108" width="808" height="808" rx="144" fill="#452222" stroke="#C62828" stroke-width="60"/>
+  <path d="M402 322H475L608 538V322H673V702H601L467 485V702H402V322Z" fill="#F5F8FA"/>
+  <rect x="260" y="758" width="504" height="96" fill="#C62828"/>
+</svg>
