@@ -1,5 +1,5 @@
 name: avaremp
-description: "Multi Platform Avare"
+description: "NexusEFB branding preview build"
 publish_to: 'none'
 version: 0.0.106+106
 
@@ -112,6 +112,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/branding/
     - assets/docs/
     - pubspec.yaml
     - assets/audio/traffic_alerts/
@@ -119,7 +120,7 @@ flutter:
     - assets/audio/runway_incursion/
 
 msix_config:
-  display_name: AvareX
+  display_name: NexusEFB
   publisher_display_name: Apps4Av Inc.
   identity_name: Apps4AvInc.AvareX
   publisher: CN=97AA5BF2-3109-4884-8224-A2AB9E6DB29A
