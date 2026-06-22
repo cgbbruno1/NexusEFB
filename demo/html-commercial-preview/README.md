@@ -1,5 +1,17 @@
 # NexusEFB Offline HTML Commercial Preview
 
+## Status
+
+Esta demo HTML foi criada apenas como alternativa emergencial, mas foi descartada como caminho principal porque nao representa o app Flutter original.
+
+A demo comercial oficial deve usar o app Flutter original na branch:
+
+`demo/branding-preview`
+
+Nao continuar desenvolvimento nesta branch sem nova autorizacao.
+
+## Contexto
+
 Este diretorio contem um prototipo comercial HTML offline do NexusEFB.
 
 ## Objetivo
