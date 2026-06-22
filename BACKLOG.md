@@ -453,8 +453,7 @@ Objetivo: recuperar uma forma confiavel de validar o projeto depois da Sprint 1.
   - Isso indica que o executavel do Dart existe, mas os wrappers locais nao estao confiaveis.
 
 - [x] Verificar o estado atual do GitHub Actions.
-  - A pagina geral de Actions ainda mostra varios runs `queued` para `Flutter CI`, `Android`, `IOS`, `Windows`, `Arm64-Linux` e `Snap-Linux`.
-  - O `Flutter CI #53` (`27501348750`) continuava `queued` no momento da inspecao.
+  - A pagina geral de Actions ainda mostra varios runs `queued` para `Flutter CI`, `Android`, `IOS`, `Windows`, `Arm64-Linux` e `Snap-Linux`.\n  - O `Flutter CI #53` (`27501348750`) continuava `queued` no momento da inspecao.
 
 - [x] Confirmar que GitHub Actions nao esta totalmente indisponivel.
   - `CI Smoke Test #1` (`27477157844`) apareceu como `completed successfully`.
@@ -559,3 +558,13 @@ Objetivo: tentar ver o app atual rodando, validando se ele compila, gera APK deb
   - nao foi encontrado workflow run associado ao commit alvo durante esta verificacao.
 - Proximo bloqueador:
   - abrir a branch em GitHub Codespaces, outro PC limpo, WSL limpo ou maquina cloud com Flutter e Android SDK funcionais para concluir build e instalacao Android.
+
+### HTML commercial preview deprecated
+
+- Branch: `demo/html-commercial-preview`
+- Status: `DESCARTADA`
+- Motivo:
+  - a demo HTML nao representa o app Flutter original;
+  - nao deve ser usada como demo comercial principal.
+- Direcao correta:
+  - a demo oficial deve usar o app Flutter original com branding minimo na branch `demo/branding-preview`.
