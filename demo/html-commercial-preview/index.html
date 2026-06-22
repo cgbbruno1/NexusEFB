@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusEFB Demo Comercial Offline</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111c;
+      --panel: #0d1b2a;
+      --panel-2: #11263d;
+      --line: #21405f;
+      --text: #edf4fb;
+      --muted: #8da7c4;
+      --accent: #3eb7ff;
+      --accent-2: #73d2ff;
+      --ok: #38c793;
+      --warn: #ffcc66;
+      --danger: #ff7b72;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(62, 183, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, #08131f 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(17, 38, 61, 0.96), rgba(10, 21, 35, 0.98));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 760px;
+      line-height: 1.5;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(62, 183, 255, 0.08);
+      color: var(--accent-2);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .notice {
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 204, 102, 0.28);
+      background: rgba(255, 204, 102, 0.08);
+      color: #ffe4a3;
+      border-radius: var(--radius);
+      line-height: 1.45;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .tab-button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(17, 38, 61, 0.85);
+      color: var(--text);
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+    }
+
+    .tab-button:hover,
+    .tab-button[aria-selected="true"] {
+      background: rgba(62, 183, 255, 0.16);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .panel {
+      display: none;
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(13, 27, 42, 0.98);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel.active { display: block; }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.two { grid-template-columns: 1.5fr 1fr; }
+    .grid.three { grid-template-columns: repeat(3, 1fr); }
+
+    .card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(17, 38, 61, 0.88), rgba(9, 18, 30, 0.98));
+      border-radius: 6px;
+      padding: 16px;
+      min-height: 120px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+      background: rgba(62, 183, 255, 0.06);
+    }
+
+    .metric label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .map-mock {
+      position: relative;
+      min-height: 420px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(rgba(115, 210, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(115, 210, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(180deg, #0a1828, #0c1d2f 55%, #10273f);
+      background-size: 38px 38px, 38px 38px, 100% 100%;
+    }
+
+    .map-mock::before,
+    .map-mock::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .map-mock::before {
+      background:
+        radial-gradient(circle at 20% 28%, rgba(62, 183, 255, 0.25), transparent 10%),
+        radial-gradient(circle at 82% 64%, rgba(56, 199, 147, 0.15), transparent 12%),
+        radial-gradient(circle at 56% 18%, rgba(255, 204, 102, 0.12), transparent 10%);
+    }
+
+    .route,
+    .fix,
+    .aircraft {
+      position: absolute;
+    }
+
+    .route {
+      left: 16%;
+      top: 22%;
+      width: 60%;
+      height: 44%;
+      border-top: 2px solid rgba(62, 183, 255, 0.9);
+      border-right: 2px solid rgba(62, 183, 255, 0.9);
+      border-bottom: 2px dashed rgba(62, 183, 255, 0.9);
+      border-radius: 140px 140px 120px 120px;
+      transform: rotate(-8deg);
+    }
+
+    .fix {
+      width: 12px;
+      height: 12px;
+      background: var(--accent-2);
+      border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(62, 183, 255, 0.12);
+    }
+
+    .fix::after {
+      content: attr(data-name);
+      position: absolute;
+      top: 16px;
+      left: -10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-2);
+      white-space: nowrap;
+    }
+
+    .aircraft {
+      left: 52%;
+      top: 46%;
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 28px solid #ffffff;
+      transform: rotate(32deg);
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.28));
+    }
+
+    .aircraft::after {
+      content: "NEX123";
+      position: absolute;
+      top: 32px;
+      left: -18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .list,
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(141, 167, 196, 0.16);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    .table th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .status-ok { color: var(--ok); font-weight: 700; }
+    .status-warn { color: var(--warn); font-weight: 700; }
+    .status-danger { color: var(--danger); font-weight: 700; }
+
+    .plate {
+      aspect-ratio: 4 / 5;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+        repeating-linear-gradient(0deg, transparent, transparent 26px, rgba(255,255,255,0.06) 26px, rgba(255,255,255,0.06) 27px),
+        linear-gradient(180deg, #102338, #0d1a2c);
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+    }
+
+    .plate-box {
+      border: 1px solid rgba(141, 167, 196, 0.35);
+      border-radius: 4px;
+      min-height: 72px;
+      padding: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(141, 167, 196, 0.26);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      padding-bottom: 16px;
+    }
+
+    @media (max-width: 1100px) {
+      .tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid.two,
+      .grid.three,
+      .metrics { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .shell { padding: 12px; }
+      .hero, .panel, .card, .metric { padding: 14px; }
+      .tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tab-button { min-height: 56px; font-size: 13px; }
+      .panel-header h2 { font-size: 20px; }
+      .map-mock { min-height: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="brand">
+          <h1>NexusEFB</h1>
+          <p>Preview comercial offline para apresentacao visual do MVP. Esta pagina e apenas um prototipo HTML local, sem qualquer integracao com Flutter, ADS-B, cartas reais, servicos meteorologicos ou operacao de voo.</p>
+        </div>
+        <div class="badges">
+          <span class="badge">Offline HTML</span>
+          <span class="badge">Demo Comercial</span>
+          <span class="badge">Nao Operacional</span>
+        </div>
+      </div>
+      <div class="notice">
+        Prototipo comercial nao operacional. Nao substitui EFB certificado, nao executa funcoes IFR certificadas e nao deve ser usado para navegacao, despacho, manutencao ou decisao operacional real.
+      </div>
+      <div class="tabs" role="tablist" aria-label="Modulos demonstrativos do MVP">
+        <button class="tab-button" role="tab" aria-selected="true" aria-controls="moving-map" id="tab-moving-map" data-tab="moving-map">Moving Map</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="cartas-offline" id="tab-cartas-offline" data-tab="cartas-offline">Cartas Offline</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="plano-voo" id="tab-plano-voo" data-tab="plano-voo">Plano de Voo</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="weather" id="tab-weather" data-tab="weather">METAR / TAF / NOTAM</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="logbook" id="tab-logbook" data-tab="logbook">Logbook Basico</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="aircraft" id="tab-aircraft" data-tab="aircraft">Cadastro de Aeronaves</button>
+      </div>
+    </section>
+
+    <section id="moving-map" class="panel active" role="tabpanel" aria-labelledby="tab-moving-map">
+      <div class="panel-header">
+        <div>
+          <h2>Moving Map</h2>
+          <div class="subtle">Visao conceitual de navegação VFR com rota, waypoints, aeronave e blocos de informacao.</div>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Mapa sintetico</span>
+          <span class="tag">Sem GPS real</span>
+          <span class="tag">Sem dados operacionais</span>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <div class="map-mock">
+            <div class="route"></div>
+            <div class="fix" data-name="SBAQ" style="left:18%; top:24%;"></div>
+            <div class="fix" data-name="WPT A1" style="left:42%; top:32%;"></div>
+            <div class="fix" data-name="WPT B4" style="left:63%; top:56%;"></div>
+            <div class="fix" data-name="SBJV" style="left:76%; top:63%;"></div>
+            <div class="aircraft"></div>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="metrics">
+            <div class="metric"><label>Proa</label><strong>132°</strong></div>
+            <div class="metric"><label>GS</label><strong>118 kt</strong></div>
+            <div class="metric"><label>ETE</label><strong>01:24</strong></div>
+          </div>
+          <div class="card">
+            <h3>Resumo de navegação</h3>
+            <table class="table">
+              <tr><th>Origem</th><td>SBAQ - Araraquara</td></tr>
+              <tr><th>Destino</th><td>SBJV - Joinville</td></tr>
+              <tr><th>Distancia</th><td>166 NM</td></tr>
+              <tr><th>Consumo</th><td>34.8 gal estimado</td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Camadas demonstrativas</h3>
+            <div class="tag-row">
+              <span class="tag">Rota ativa</span>
+              <span class="tag">Waypoints</span>
+              <span class="tag">Aerodromos</span>
+              <span class="tag">Espaco aereo</span>
+              <span class="tag">Rulers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cartas-offline" class="panel" role="tabpanel" aria-labelledby="tab-cartas-offline">
+      <div class="panel-header">
+        <div>
+          <h2>Cartas Offline</h2>
+          <div class="subtle">Exemplo de organizacao de cartas para consulta local durante briefing e voo.</div>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Biblioteca local</span>
+          <span class="tag">Cache offline</span>
+          <span class="tag">Sem cartas reais</span>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <div class="plate">
+            <div>
+              <strong>AERODROMO / APROXIMACAO</strong>
+              <div class="subtle">Mock visual de carta offline</div>
+            </div>
+            <div class="plate-box">Area principal reservada para imagem ou PDF local da carta. Nesta demo, o espaco apenas simula enquadramento e leitura em cabine.</div>
+            <div class="tag-row">
+              <span class="tag">Pinch Zoom</span>
+              <span class="tag">Favoritas</span>
+              <span class="tag">Disponivel offline</span>
+            </div>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <h3>Colecao demonstrativa</h3>
+            <table class="table">
+              <thead><tr><th>Carta</th><th>Tipo</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>SBAQ AD 2</td><td>Aerodromo</td><td class="status-ok">Baixada</td></tr>
+                <tr><td>SBJV VAC</td><td>Visual</td><td class="status-ok">Baixada</td></tr>
+                <tr><td>SBKP SID</td><td>Procedimento</td><td class="status-warn">Atualizacao pendente</td></tr>
+                <tr><td>SBRJ STAR</td><td>Procedimento</td><td class="status-ok">Baixada</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Recursos de cabine</h3>
+            <div class="tag-row">
+              <span class="tag">Busca rapida</span>
+              <span class="tag">Historico recente</span>
+              <span class="tag">Marcacao por aeronave</span>
+              <span class="tag">Consulta sem internet</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="plano-voo" class="panel" role="tabpanel" aria-labelledby="tab-plano-voo">
+      <div class="panel-header">
+        <div>
+          <h2>Plano de Voo</h2>
+          <div class="subtle">Montagem demonstrativa de rota, performance basica e briefing resumido.</div>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Planejamento VFR</span>
+          <span class="tag">Peso e balanceamento futuro</span>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><label>Distancia</label><strong>166 NM</strong></div>
+        <div class="metric"><label>Combustivel</label><strong>43.0 gal</strong></div>
+        <div class="metric"><label>Alternado</label><strong>SBKP</strong></div>
+      </div>
+      <div class="grid two" style="margin-top:16px;">
+        <div class="card">
+          <h3>Rota demonstrativa</h3>
+          <table class="table">
+            <thead><tr><th>Seq</th><th>Ponto</th><th>ETE</th><th>Dist</th></tr></thead>
+            <tbody>
+              <tr><td>01</td><td>SBAQ</td><td>00:00</td><td>0 NM</td></tr>
+              <tr><td>02</td><td>WPT A1</td><td>00:22</td><td>41 NM</td></tr>
+              <tr><td>03</td><td>WPT B4</td><td>00:58</td><td>112 NM</td></tr>
+              <tr><td>04</td><td>SBJV</td><td>01:24</td><td>166 NM</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>Painel de decisao</h3>
+          <table class="table">
+            <tr><th>Aeronave</th><td>C172 PT-NEX</td></tr>
+            <tr><th>Piloto</th><td>Demo Comercial</td></tr>
+            <tr><th>Margem</th><td class="status-ok">Combustivel acima da reserva</td></tr>
+            <tr><th>Observacao</th><td>Dados sinteticos apenas para apresentacao visual.</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="weather" class="panel" role="tabpanel" aria-labelledby="tab-weather">
+      <div class="panel-header">
+        <div>
+          <h2>METAR / TAF / NOTAM</h2>
+          <div class="subtle">Painel de briefing meteorologico e operacional em formato visual de demonstracao.</div>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Dados ficticios</span>
+          <span class="tag">Sem feed real</span>
+        </div>
+      </div>
+      <div class="grid three">
+        <div class="card">
+          <h3>METAR</h3>
+          <p><strong>SBAQ 221500Z</strong><br>12008KT 9999 FEW025 24/16 Q1015</p>
+          <p class="subtle">Interpretacao visual: visibilidade boa, vento moderado, teto alto.</p>
+        </div>
+        <div class="card">
+          <h3>TAF</h3>
+          <p><strong>SBAQ 221100Z 2212/2312</strong><br>12010KT CAVOK<br>TEMPO 2218/2222 3000 TSRA BKN020CB</p>
+          <p class="subtle">Janela convectiva destacada para briefing de rota.</p>
+        </div>
+        <div class="card">
+          <h3>NOTAM</h3>
+          <p><strong>SBJV</strong><br>TWY B CLOSED 1200-1800Z<br>LIGHTING CHECK IN PROGRESS</p>
+          <p class="subtle">Cards operacionais priorizados para leitura rapida em solo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="logbook" class="panel" role="tabpanel" aria-labelledby="tab-logbook">
+      <div class="panel-header">
+        <div>
+          <h2>Logbook Basico</h2>
+          <div class="subtle">Visual de horas, ultimos voos e exportacao futura.</div>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Registro simplificado</span>
+          <span class="tag">Exportacao futura PDF/CSV</span>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><label>Horas Totais</label><strong>184.7</strong></div>
+        <div class="metric"><label>Ultimos 30 dias</label><strong>12.4</strong></div>
+        <div class="metric"><label>Pousos</label><strong>18</strong></div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3>Voos recentes</h3>
+        <table class="table">
+          <thead><tr><th>Data</th><th>Rota</th><th>Aeronave</th><th>Tempo</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>22/06/2026</td><td>SBAQ - SBJV</td><td>PT-NEX</td><td>1.4 h</td><td class="status-ok">Sincronizado</td></tr>
+            <tr><td>20/06/2026</td><td>SBJV - SBKP</td><td>PT-NEX</td><td>1.2 h</td><td class="status-ok">Sincronizado</td></tr>
+            <tr><td>18/06/2026</td><td>SBAQ - SBRP</td><td>PT-ABC</td><td>0.9 h</td><td class="status-warn">Rascunho</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="aircraft" class="panel" role="tabpanel" aria-labelledby="tab-aircraft">
+      <div class="panel-header">
+        <div>
+          <h2>Cadastro de Aeronaves</h2>
+          <div class="subtle">Modelo de frota leve com configuracao de combustivel, horas e situacao basica.</div>
+        </div>
+        <div class="tag-row">
+          <span class="tag">Monomotor</span>
+          <span class="tag">Agricola futuro</span>
+          <span class="tag">Frota futura</span>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <h3>Frota demonstrativa</h3>
+          <table class="table">
+            <thead><tr><th>Matricula</th><th>Modelo</th><th>Horas</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>PT-NEX</td><td>Cessna 172</td><td>3,284 h</td><td class="status-ok">Ativa</td></tr>
+              <tr><td>PT-AGX</td><td>Air Tractor AT-402</td><td>1,128 h</td><td class="status-warn">Preview agricola</td></tr>
+              <tr><td>PP-MXN</td><td>Baron B58</td><td>4,912 h</td><td class="status-ok">Ativa</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <h3>Aeronave em foco</h3>
+            <table class="table">
+              <tr><th>Motor</th><td>Lycoming IO-360</td></tr>
+              <tr><th>Hobbs</th><td>3284.2</td></tr>
+              <tr><th>Combustivel</th><td>53 gal utilizaveis</td></tr>
+              <tr><th>Perfil</th><td>Treinamento e viagens regionais</td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <h3>Campos previstos</h3>
+            <div class="tag-row">
+              <span class="tag">Fotos</span>
+              <span class="tag">Helice</span>
+              <span class="tag">Checklist por modelo</span>
+              <span class="tag">Performance</span>
+              <span class="tag">Manutencao futura</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      NexusEFB HTML Commercial Preview. Prototipo offline, sem conectividade, sem integracao ao app Flutter e sem uso operacional autorizado.
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const tabs = Array.from(document.querySelectorAll('[data-tab]'));
+      const panels = Array.from(document.querySelectorAll('.panel'));
+
+      function activate(tabName) {
+        tabs.forEach((button) => {
+          const selected = button.dataset.tab === tabName;
+          button.setAttribute('aria-selected', selected ? 'true' : 'false');
+        });
+
+        panels.forEach((panel) => {
+          panel.classList.toggle('active', panel.id === tabName);
+        });
+      }
+
+      tabs.forEach((button) => {
+        button.addEventListener('click', () => activate(button.dataset.tab));
+      });
+    }());
+  </script>
+</body>
+</html>
